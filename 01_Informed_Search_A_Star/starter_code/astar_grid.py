@@ -60,7 +60,21 @@ def neighbours(grid, node):
     `node` is a (row, col) tuple. A neighbour is valid if is_walkable()
     returns True for it. Use up/down/left/right moves only (no diagonals).
     """
-    raise NotImplementedError("TODO: implement neighbours()")
+    row, col = node
+
+    directions = [
+        (-1, 0),  # Up
+        (1, 0),   # Down
+        (0, -1),  # Left
+        (0, 1),   # Right
+    ]
+
+    for dr, dc in directions:
+        next_row = row + dr
+        next_col = col + dc
+
+        if is_walkable(grid, next_row, next_col):
+            yield (next_row, next_col)
 
 
 def heuristic(node, goal):
@@ -71,8 +85,7 @@ def heuristic(node, goal):
     This must be admissible for 4-directional grid movement -- explain in
     your submission notes why Manhattan distance satisfies this.
     """
-    raise NotImplementedError("TODO: implement heuristic()")
-
+    return abs(node[0] - goal[0]) + abs(node[1] - goal[1])
 
 def reconstruct_path(came_from, current):
     """Rebuild the path from start to `current` using the came_from map.
@@ -107,8 +120,62 @@ def astar(grid, start, goal):
     heap gives you a deterministic tie-break (prefer larger g) -- see the
     worked example solution for this pattern if you get stuck.
     """
-    raise NotImplementedError("TODO: implement astar()")
 
+    open_heap = []
+
+    start_g = 0
+    start_f = start_g + heuristic(start, goal)
+
+    heapq.heappush(
+        open_heap,
+        (start_f, -start_g, start[0], start[1], start)
+    )
+
+    came_from = {}
+    g_score = {start: 0}
+    closed = set()
+
+    while open_heap:
+        current_f, negative_g, row, col, current = heapq.heappop(open_heap)
+
+        current_g = -negative_g
+
+        if current in closed:
+            continue
+
+        if current_g != g_score.get(current, float("inf")):
+            continue
+
+        if current == goal:
+            path = reconstruct_path(came_from, current)
+            return path, g_score[current]
+
+        closed.add(current)
+
+        for next_node in neighbours(grid, current):
+            if next_node in closed:
+                continue
+
+            tentative_g = g_score[current] + 1
+
+            if tentative_g < g_score.get(next_node, float("inf")):
+                came_from[next_node] = current
+                g_score[next_node] = tentative_g
+
+                next_f = tentative_g + heuristic(next_node, goal)
+
+                heapq.heappush(
+                    open_heap,
+                    (
+                        next_f,
+                        -tentative_g,
+                        next_node[0],
+                        next_node[1],
+                        next_node,
+                    )
+                )
+
+    return None, float("inf")
 
 if __name__ == "__main__":
     start = find_cell(ASSIGNMENT_GRID, "S")

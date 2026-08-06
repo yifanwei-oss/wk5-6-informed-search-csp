@@ -47,24 +47,64 @@ def test_given_example():
 # TODO Test Case 1
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
+# Category: Structure -> obstacle/detour.
+# It checks that A* goes around a wall and finds the shortest route.
 def test_case_1():
-    raise NotImplementedError("TODO: design and implement test case 1")
+    grid = [
+        "S#G",
+        "...",
+    ]
+
+    start = find_cell(grid, "S")
+    goal = find_cell(grid, "G")
+
+    path, cost = astar(grid, start, goal)
+
+    assert path is not None
+    assert path[0] == start
+    assert path[-1] == goal
+    assert cost == 4
+    assert (0, 1) not in path
 
 
 # ---------------------------------------------------------------------
 # TODO Test Case 2
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
+# Category: Boundary -> start is already the goal.
+# It checks the smallest valid path with zero movement.
 def test_case_2():
-    raise NotImplementedError("TODO: design and implement test case 2")
+    grid = ["."]
+
+    start = (0, 0)
+    goal = (0, 0)
+
+    path, cost = astar(grid, start, goal)
+
+    assert path == [(0, 0)]
+    assert cost == 0
 
 
 # ---------------------------------------------------------------------
 # TODO Test Case 3
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
+# Category: Solvability -> no path exists.
+# It checks that the program returns failure for a blocked grid.
 def test_case_3():
-    raise NotImplementedError("TODO: design and implement test case 3")
+    grid = [
+        "S#G",
+        "###",
+        "...",
+    ]
+
+    start = find_cell(grid, "S")
+    goal = find_cell(grid, "G")
+
+    path, cost = astar(grid, start, goal)
+
+    assert path is None
+    assert cost == float("inf")
 
 
 if __name__ == "__main__":
