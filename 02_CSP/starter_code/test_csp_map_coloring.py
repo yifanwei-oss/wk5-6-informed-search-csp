@@ -57,7 +57,22 @@ def test_given_example():
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
 def test_case_1():
-    raise NotImplementedError("TODO: design and implement test case 1")
+
+    assignment={
+
+        "NT":"Red"
+
+    }
+
+    assert is_consistent(
+
+        assignment,
+
+        "WA",
+
+        "Red"
+
+    )==False
 
 
 # ---------------------------------------------------------------------
@@ -65,7 +80,24 @@ def test_case_1():
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
 def test_case_2():
-    raise NotImplementedError("TODO: design and implement test case 2")
+
+    assignment={
+
+        "WA":"Red",
+
+        "NT":"Green"
+
+    }
+
+    assert is_consistent(
+
+        assignment,
+
+        "T",
+
+        "Blue"
+
+    )==True
 
 
 # ---------------------------------------------------------------------
@@ -73,7 +105,14 @@ def test_case_2():
 # Which mind-map category does this represent? (edit this comment)
 # ---------------------------------------------------------------------
 def test_case_3():
-    raise NotImplementedError("TODO: design and implement test case 3")
+    from csp_map_coloring import VARIABLES
+
+    result=backtracking_search(
+        VARIABLES,
+        ["Red"]
+    )
+
+    assert result is None
 
 
 if __name__ == "__main__":
